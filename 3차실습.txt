@@ -1,0 +1,24 @@
+<1번>
+import java.util.Arrays;
+
+public class Hello {
+  public static void main(String[] args) {
+  String[] name = {"Hello", "Java", "Program"};
+  System.out.println(Arrays.toString(name));
+}
+}
+<2번>
+public class Hello {
+  public static void main(String[] args) {
+  double sum = 0;
+  double averge = 0;
+  double[] score = {90, 70.5, 80, 79, 82.5, 50, 70, 90.2, 89.5, 89.7};
+  for (int i = 0; i <score.length; i++)
+    {
+    sum += score[i];
+    }
+    averge = sum / (double)score.length;
+    System.out.println("합계: " + sum);
+    System.out.printf("평균: %.2f", averge);
+}
+}
