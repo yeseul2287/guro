@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>농부들의 날씨</title>
+    <link rel="stylesheet" href="/ex.css">
+    <script>
+        function displayDateTime() {
+              var now = new Date();
+              var year = now.getFullYear();
+              var month = ('0' + (now.getMonth() + 1)).slice(-2); // 월을 두 자리 수로 표시
+              var day = ('0' + now.getDate()).slice(-2); // 일을 두 자리 수로 표시
+              var hour = ('0' + now.getHours()).slice(-2); // 시간을 두 자리 수로 표시
+              var minute = ('0' + now.getMinutes()).slice(-2); // 분을 두 자리 수로 표시
+              var ampm = now.getHours() >= 12 ? 'PM' : 'AM'; // 오전 또는 오후 구분
+      
+              var currentDateString = year + '-' + month + '-' + day;
+              var currentTimeString = hour + ':' + minute + ' ' + ampm;
+      
+              document.getElementById('currentDateTime').innerText = currentDateString + ' ' + currentTimeString;
+          }
+          window.onload = function() {
+              displayDateTime();
+              setInterval(displayDateTime, 1000);
+          };
+      </script>
+      <script>
+        $(document).ready(function() {
+          $(".login1").click(function() {
+              alert("아직 활성화되지않습니다 잠시후 다시 시도해주세요");
+          });
+        });
+      </script>
+      <!-- <script>
+        var xhr = new XMLHttpRequest();
+        var url = 'http://apis.data.go.kr/1360000/FmlandWthrInfoService/getDayStatistics';
+        var queryParams = '?' + encodeURIComponent('serviceKey') + '='+'	%2F21nmS%2B%2BfdnnXw957%2Bcro9C4tM8ZCGeZL77fB244WuMQe6ZTq0qfmifqkCYvAFISbxQXtOpi84q495p9Tb%2FsxQ%3D%3D'; /*Service Key*/
+        queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent('4');
+        queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('10');
+        queryParams += '&' + encodeURIComponent('dataType') + '=' + encodeURIComponent('XML');
+        queryParams += '&' + encodeURIComponent('ST_YMD') + '=' + encodeURIComponent('20161201');
+        queryParams += '&' + encodeURIComponent('ED_YMD') + '=' + encodeURIComponent('20161201');
+        queryParams += '&' + encodeURIComponent('AREA_ID') + '=' + encodeURIComponent('4122000000');
+        queryParams += '&' + encodeURIComponent('PA_CROP_SPE_ID') + '=' + encodeURIComponent('PA130201');
+        xhr.open('GET', url + queryParams);
+        xhr.onreadystatechange = function () {
+            if (this.readyState == 4) {
+                alert('Status: '+this.status+'nHeaders: '+JSON.stringify(this.getAllResponseHeaders())+'nBody: '+this.responseText);
+            }
+        };
+  
+        xhr.send('');
+      </script> -->
+      <script>
+      function loadExternalData() {
+      $.ajax({
+          url: 'https://apis.data.go.kr/1360000/FmlandWthrInfoService/getDayStatistics?serviceKey=%2F21nmS%2B%2BfdnnXw957%2Bcro9C4tM8ZCGeZL77fB244WuMQe6ZTq0qfmifqkCYvAFISbxQXtOpi84q495p9Tb%2FsxQ%3D%3D&pageNo=1&numOfRows=10&dataType=XML&ST_YMD=20161201&ED_YMD=20161201&AREA_ID=4122000000&PA_CROP_SPE_ID=PA130201',
+          dataType: 'xml',
+          success: function (data) {
+              $(data).find('item').each(function () {
+                var id = $(this).find('areaId').text();
+                var adress = $(this).find('areaName').text();
+                var mnar = $(this).find('mnhAvgRhm').text();
+                var mnat = $(this).find('mnhAvgTa').text();
+                var mnaw = $(this).find('mnhAvgWs').text();
+                varmnmt = $(this).find('mnhMaxTa').text();
+                var mnmr = $(this).find('mnhMinRhm').text();
+                var mnmt2 = $(this).find('mnhMinTa').text();
+                var mnsr = $(this).find('mnhSumRn').text();
+                var mnss = $(this).find('mnhSumSs').text();
+                var pcm = $(this).find('paCropName').text();
+                var pcs = $(this).find('paCropSpeId').text();
+                var pcsn = $(this).find('paCropSpeName').text();
+                var wc = $(this).find('wrnCd').text();
+                var wc2= $(this).find('wrnCount').text();
+                var ym = $(this).find('ym').text();
+  
+  
+                var content = `
+                      <div>
+                          <strong>지역명:</strong> 
+                          ${id}<br>
+                          ${adress}<br>
+                          <!-- 나머지 데이터를 추가하세요 -->
+                      </div>
+                      <hr>
+                  `;
+  
+                  // 데이터를 페이지에 추가
+                  $('#data-container').append(content);
+              });
+          },
+          error: function (xhr, status, error) {
+              console.error("외부 데이터 로드 실패:", error);
+          },
+      });
+  }
+  
+  loadExternalData();
+ 
+    </script>
+</head>
+<body>
+    <!-- 헤더 -->
+    <header>
+        <div class="logo">
+            <a class="navbar-brand" href="#"><img src="/logo.jpg" width="100" height="100"></a>
+            <h1>농부들의 날씨</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#">홈</a></li>
+                <li><a href="#">농씨란</a></li>
+                <li><a href="#">날씨 정보</a></li>
+                <li><a href="#">농작물 정보</a></li>
+                <li><a href="#">지역 선택</a></li>
+                <li><a href="#">서비스 안내</a></li>
+            </ul>
+        </nav>
+        <div class="user-actions">
+            <button type="button" class="btn btn-info">로그인</button>
+            <button type="button" class="btn btn-info">회원가입</button>
+        </div>
+        <div class="search-bar">
+            <input type="text" placeholder="검색">
+            <button>검색</button>
+        </div>
+    </header>
+
+    <!-- 메인 콘텐츠 영역 -->
+    <main>
+        <div class="mainimg">
+            <a class="navbar-brand" href="#"><img src="/1 (2).jpg" width="70" height="70"></a>
+            <p>"여긴 바로 농부들의 날씨!<br>
+                당신의 농업 생활을 '날씨'마다 편리하게 만들어주는 친구에요. <br>
+                여기서는 마치 농부들의 날씨 마법사처럼 정확한 날씨 정보와 더불어 유쾌한 팁과 재미있는 농업 이야기도 함께 제공합니다. <br>
+                우리는 작은 농장을 향한 모험을 응원하고, 비가 오든 태풍이 몰아쳐도 함께 우리와 함께라면 걱정없어요. <br>
+                그래서 농부들은 날씨에 대해 말합니다: '그럼, 농부들의 날씨에 맡겨봐!' <br>
+                지금 당장 당신의 농업 생활을 더 즐겁게 만들어줄 친구를 만나보세요! <br>
+                어서오세요, 당신을 기다리고 있답니다!"</p>
+        </div>
+        <!-- 현재 날씨 요약 정보 -->
+        <section class="weather-summary">
+            <!-- 현재 날씨 정보 표시 -->
+        </section>
+
+        <!-- 날씨 예보 -->
+        <section class="weather-forecast">
+            <!-- 날씨 예보 정보 표시 -->
+        </section>
+
+        <!-- 농작물 관련 정보 -->
+        <section class="crop-info">
+            <!-- 농작물 관련 정보 표시 -->
+        </section>
+
+        <!-- 지역별 날씨 정보 -->
+        <section class="local-weather">
+            <!-- 지역별 날씨 정보 표시 -->
+        </section>
+    </main>
+
+    <!-- 추가 콘텐츠 영역 -->
+    <section class="additional-content">
+        <!-- 농부들의 날씨 소개 및 환영 멘트 -->
+        <!-- 농부들의 날씨의 주요 서비스 안내 -->
+        <!-- 뉴스나 이벤트 공지사항 등 -->
+    </section>
+    <form>Select a Customer:<select name="customers" onchange="showCustomer(this.value)">
+        <option value="ALFKI">Alfreds Futterkiste</option><option value="NORTS ">North/South</option>
+        <option value="WOLZA">Wolski Zajazd</option></select></form><div id="txtHint">
+        <b>Customer info will be listed here.</b>
+        </div>
+        <h2>Database Data</h2>
+        <div id="data-container"></div>
+        <!-- <div adress="data-container"></div> -->
+    <!-- 푸터 -->
+    <footer>
+        <ul class="footer-links">
+            <li><a href="#">@농부들의 날씨</a></li>
+        </ul>
+    </footer>
+</body>
+</html>
